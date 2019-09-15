@@ -1,0 +1,121 @@
+---
+title: "R Assignment 3"
+author: "Chen Ming"
+date: "May 20th"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+#### 2017022002
+# Part 1
+
+#### **1.1. Find descriptive statistics of the data and summarize them into a table**
+Experiment details are omitted here.
+```{r cars, echo=FALSE, results='hide'}
+
+newdata <- read.csv(file = "alumni_giving_rate.csv", header = TRUE)
+results='hide'
+newdataframe <- newdata[c("Graduation.Rate","Number.of.Classes.Under.20","Student.Faculty.Ratio","Alumni.Giving.Rate")]
+newdataframe
+```
+
+#### **1.2.	Use graphical analysis to investigate the relationship between Alumni Giving Rate and each of the other variables**
+Scatter plot is demonstrated as follows. In the first and the third graphs, we can find that points cluster closely around fitted lines. While in the second graph, points seem to drift away from fitted line. From the graphical analysis, we can reasonably assume that alumni giving rate is more closely related to both graduation rate and faculty rate than number of classes under 20. 
+```{r}
+par(mfrow=c(2,2))
+fit1 <- lm(Alumni.Giving.Rate~Graduation.Rate,data = newdataframe)
+plot1 = plot( newdataframe$Graduation.Rate,newdataframe$Alumni.Giving.Rate,
+             main = "Giving Rates vs. Graduation Rate",
+             xlab = "Graduation Rate",
+             ylab = "Alumni Giving Rate",
+             pch = 4
+)
+lines(newdataframe$Graduation.Rate, fitted(fit1), lty = 1, col = "green")
+
+fit2 <- lm(Alumni.Giving.Rate~Number.of.Classes.Under.20,data = newdataframe)
+plot2 = plot(newdataframe$Number.of.Classes.Under.20,newdataframe$Alumni.Giving.Rate, 
+             main = "Giving Rates vs. No. of Classes Under 20",
+             xlab = "Number.of.Classes.Under.20",
+             ylab = "Alumni Giving Rate",
+             pch = 4
+)
+lines(newdataframe$Number.of.Classes.Under.20, fitted(fit2), lty = 1, col = "green")
+
+fit3 <- lm(Alumni.Giving.Rate~Student.Faculty.Ratio,data = newdataframe)
+plot3 = plot(newdataframe$Student.Faculty.Ratio,newdataframe$Alumni.Giving.Rate, 
+             main = "Giving Rates vs. Student&Faculty.Ratio",
+             xlab = "Student.Faculty.Ratio",
+             ylab = "Alumni Giving Rate",
+             pch = 4
+)
+lines(newdataframe$Student.Faculty.Ratio, fitted(fit3), lty = 1, col = "green")
+```
+
+
+#### **1.3.Develop a multiple linear regression model that could be used to predict the Alumni Giving Rate using the data provided**
+We can use  __stepAIC__ method to construct the best multi-linear regression model from a set of candidate variables.The experiment result indicates that, AIC value becomes smaller when the variable **"Number of classes under 20"** is deleted from the regression model. The lowest AIC value is **196.7**. Since smaller AIC value means better fitting effect, we should construct a regression model with **"Graduation Rates"** and **"Student & Faculty Ratios"** as independent variables. The linear regression model fomula is constructed as $$y=-19.1063+0.7557x_{1}-1.2460x_{2}$$where $y$ denotes alumni giving rate, $x_{1}$ denotes graduation rate, $x_{2}$ denotes student&faculty ratio.
+```{r}
+
+library(MASS)
+
+multilinearregression1 = lm(Alumni.Giving.Rate~Graduation.Rate+Number.of.Classes.Under.20+ Student.Faculty.Ratio,data = newdataframe)
+#stepAIC(multilinearregression1, direction = "backward")
+newmodel = lm(Alumni.Giving.Rate ~ Graduation.Rate + Student.Faculty.Ratio, 
+              data = newdataframe)
+#newmodel
+
+#summary(newmodel)
+```
+
+#### **1.4.Check the model assumptions**
+In Q-Q graph, points closely cluster around the line, which proves that the assumption of __normality__ is satisfied; there is no reason to assume that graduation ratio and faculty to student ratio is related. Therefore, the assumption of __independence__ is satisfied;from graph one, we can observe that residuals has no systematic relationship between residuals and the predicted values. The model well captures systematic variance in the data, thereby proves that the assumption of __Linearity__ is satisfied; the Scale-Location graph shows that the points form a random band around the horizontal line. Hence the assumption of __Homoscedasticity__ is satisfied.
+```{R}
+par(mfrow = c(2,2))
+chechmodel = plot(newmodel)
+```
+
+# Part 2
+
+#### **2.1.	Calculate the mean of Fertility and partition the provinces into two groups**
+The mean of fertility in stated provinces is **70.14255**. Experiment details are omitted here.
+```{r}
+attach(swiss)
+FertilityCol = swiss["Fertility"]
+mean_fertility = mean(as.matrix(FertilityCol))
+#mean_fertility
+swiss$ynprovinces[swiss$Fertility > mean_fertility]<- 1
+swiss$ynprovinces[swiss$Fertility < mean_fertility] <- 0
+group1 <- subset(swiss,ynprovinces == 1)
+#group1
+
+group2 <- subset(swiss,ynprovinces == 0)
+#group2
+y = as.matrix(swiss$ynprovinces)
+#y
+```
+
+#### **2.2.	Use logistic regression to show the relationship between y and the other variables and then interpret the regression results**
+The experiment result shows that **Agricluture**, **Examination** and **Education** are negatively related to Fertility, with remaining factors positively related to Fertility. P-values for **Examination** and **Agriculture** are 0.0203 and 0.0165 respectively. While p-values for other factors are all beyond the range of significance. The experiment result indicates that fertility in selected provinces is significantly related to __Agriculture__ and __Examination__ under significance level of 0.05. It implies that fetility is closely related to agriculture situation and examination circumstance in the provinces.
+
+```{r}
+lgfit <- glm(formula = y~Agriculture+Examination+Education+Catholic+Infant.Mortality, family = binomial(),data = swiss)
+#summary(lgfit)
+```
+
+#### **2.3.	Choose a model selection criterion, for instances, AIC, BIC, adjusted R square or Cp, and use it to select a reasonable model**
+We can construct the best multi-linear regression model from a set of candidate variables. Under AIC criterion, regression model with smaller AIC value is considered better. The experiment result indicates that AIC value gets smallest(at -85.27) when the variables "Catholic" and "Education" are deleted from the regression model. Hence we should construct a regression model with __"Infant.Mortality"__, __"Agriculture"__ and __"Examination"__ as independent variables. The regression model constructed is:
+\begin{equation}
+y = 1.05056-0.00811x_{1}-0.05017x_{2}+0.03501x_{3}
+\end{equation}
+where $x_{1}$, $x_{2}$, and $x_{3}$ denotes **Agriculture**, **Examination**, and **Infant Mortality** respectively. 
+```{r}
+library(MASS)
+multilinearregression4 <- lm(y~Agriculture+Examination+Education+Catholic+Infant.Mortality, data = swiss)
+#stepAIC(multilinearregression4, direction = "backward")
+newmodel2 <-  lm(y ~ Agriculture + Examination + Infant.Mortality, data = swiss)
+#newmodel2    
+```

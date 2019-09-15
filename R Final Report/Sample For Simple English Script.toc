@@ -1,0 +1,20 @@
+\contentsline {section}{\numberline {1}Part 1}{3}% 
+\contentsline {subsection}{\numberline {1.1}1.1 Report descriptive statistics of the data set obtained in (a).}{3}% 
+\contentsline {subsection}{\numberline {1.2}Use boxplot to show the distributions of the height of male and female students.}{3}% 
+\contentsline {subsection}{\numberline {1.3}Which numerical variables might have an influence on the student's pulse?}{3}% 
+\contentsline {subsection}{\numberline {1.4}Is the probability of a student clapping his/her left hand on top less than 0.2?}{4}% 
+\contentsline {subsection}{\numberline {1.5}Is the span of the writing hand in general larger than the span of the non-writing hand?}{5}% 
+\contentsline {section}{\numberline {2}Part 2}{5}% 
+\contentsline {subsection}{\numberline {2.1}According to CLT, what is the approximated distribution of the sample means?}{5}% 
+\contentsline {subsection}{\numberline {2.2}Draw the density plots of the sample means and its approximated distribution on one graph}{5}% 
+\contentsline {subsection}{\numberline {2.3}Show the qq plot of the distribution of the sample means}{5}% 
+\contentsline {subsection}{\numberline {2.4}What conclusion can you draw from this simulation?}{5}% 
+\contentsline {section}{\numberline {3}Part 3}{7}% 
+\contentsline {subsection}{\numberline {3.1}Draw 5000 random samples of X}{7}% 
+\contentsline {subsection}{\numberline {3.2}Given $\alpha $ = 0.05, find the VaR of the samples obtained in 3.1}{7}% 
+\contentsline {subsection}{\numberline {3.3}Find the CVaR of the samples obtained in 3.1}{7}% 
+\contentsline {section}{\numberline {4}Part 4}{8}% 
+\contentsline {subsection}{\numberline {4.1}Report on data exploration}{8}% 
+\contentsline {subsection}{\numberline {4.2}Report on modeling (baseline model and alternatives}{10}% 
+\contentsline {subsection}{\numberline {4.3}Report on results and interpretation of the fitted model}{10}% 
+\contentsline {subsection}{\numberline {4.4}Report on model assumptions}{11}% 
