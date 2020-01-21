@@ -1,0 +1,77 @@
+---
+title: "随堂实验作业11"
+author: "chenming"
+date: "2019年11月18日"
+output: html_document
+---
+
+## 将mtcars数据表里的记录按照“马力”值（hp）从高到低的顺序进行排序。
+```{r}
+mtcars_sort <- mtcars[order(mtcars$hp, decreasing = TRUE),]
+```
+
+## 将mtcars数据表里的记录先后按照变速箱类型（am：自动档的车am为0，手动档的车am为1）和效率（mpg）用以下规则进行排序：（1）自动档的车放前，手动档的车放后；（2）对于同种变速箱类型的车，效率高的车放前，效率低的车放后。
+```{r}
+mtcars_sort2 <- mtcars[order(mtcars$am, -mtcars$mpg),]
+mtcars_sort2
+
+```
+
+
+## 将mtcars数据表里的记录按照变速箱类型（am）、前进档数（gear）和汽化器数（carb）进行排序（顺序或者倒序均可）
+```{r}
+mtcars_sort3 <- mtcars[order(-mtcars$am, mtcars$gear, mtcars$carb),]
+mtcars_sort3
+```
+
+## 首先下载本次实验作业附件中的CSV文件：Vlookup.csv。然后完成以下任务：
+
+### 将Vlookup.csv文件读入到R工作空间。
+```{r}
+dat <- read.csv("C:/Users/Mingjingzhishui/Desktop/Vlookup.csv",header = TRUE)
+dat
+```
+### 将关于value的部分和关于metric的部分分别存入两个不同的数据框（就是将数据表的第1和第2列存入一个数据框，将数据表的第4和第5列存入另外一个数据框），这两个数据框都不能含有NA值(提示：第一个数据框有两列：Key和Value;第二个数据框也有两列：Key和Metric；检查两个数据框中是否存在NA值，存在的话请删掉。可能会需要使用之前所学的分解数据的技巧和is.na()函数)
+```{r}
+df1 <- data.frame(dat$Key,dat$Value)       
+colnames(df1) <- c("Key","Value")
+
+df2 <- data.frame(dat$Key.1,dat$Metric)
+colnames(df2) <- c("Key","Value") 
+
+# 查询df2中na的行
+df2[which(is.na(df2)),]
+# 使得df2中na的数据删除
+df2<- na.omit(df2)
+# 再次查看df2中na的个数
+which(is.na(df2))
+
+
+```
+
+### 将这两个不同的数据框通过Key分别进行以下四种类型的数据合并：内连接，全连接，左连接，右连接。并用dim()函数查看四个合并后的数据框的维数
+```{r}
+# 内连接
+df3 <- merge(df1,df2 , by = "Key",all = FALSE)
+df3
+
+# 全连接
+df4 <- merge(df1,df2,all = TRUE)
+df4
+# 左连接
+df5 <- merge(df1,df2,all.x = TRUE)
+df5
+
+# 右连接
+df6 <- merge(df1,df2,all.y = TRUE)
+df6
+```
+
+### 将以上四种数据合并的结果分别导出存成四个.CSV文件
+```{r}
+write.csv(df3, "./df3.csv")
+write.csv(df4, "./df4.csv")
+write.csv(df5, "./df5.csv")
+write.csv(df6, "./df6.csv")
+getwd()
+```
